@@ -1,0 +1,1744 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>PGN Rights Quiz</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    padding: 25px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-family: Arial, Helvetica, sans-serif;
+
+    background:
+        radial-gradient(circle at top left, #eef2ff, transparent 45%),
+        radial-gradient(circle at bottom right, #f4edff, #f7f7f9 55%);
+
+    overflow-x: hidden;
+}
+
+/* MAIN CARD */
+
+.quiz {
+
+    width: 650px;
+    max-width: 95%;
+
+    background: white;
+
+    padding: 38px;
+
+    border-radius: 22px;
+
+    box-shadow:
+        0 15px 50px rgba(0,0,0,.12);
+
+    position: relative;
+
+    z-index: 5;
+
+}
+
+.badge {
+
+    display: inline-block;
+
+    padding: 7px 12px;
+
+    border-radius: 50px;
+
+    background: #eeeeff;
+
+    font-size: 12px;
+
+    font-weight: bold;
+
+    letter-spacing: 1px;
+
+}
+
+h1 {
+
+    font-size: 42px;
+
+    margin:
+
+        12px 0
+        5px;
+
+}
+
+.subtitle {
+
+    color: #666;
+
+    margin-bottom: 28px;
+
+}
+
+/* PROGRESS */
+
+.progress-row {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    font-weight: bold;
+
+    margin-bottom: 8px;
+
+}
+
+.progress-bar {
+
+    width: 100%;
+
+    height: 16px;
+
+    background: #e8e8ed;
+
+    border-radius: 50px;
+
+    overflow: hidden;
+
+}
+
+.progress-fill {
+
+    height: 100%;
+
+    width: 0%;
+
+    background:
+
+        linear-gradient(
+            90deg,
+            #2e9d57,
+            #65ca86
+        );
+
+    transition: width .4s ease;
+
+}
+
+/* INPUT */
+
+textarea {
+
+    width: 100%;
+
+    min-height: 95px;
+
+    margin-top: 22px;
+
+    padding: 15px;
+
+    font-family: Arial;
+
+    font-size: 16px;
+
+    border:
+
+        2px solid
+        #dedee5;
+
+    border-radius: 13px;
+
+    resize: vertical;
+
+    outline: none;
+
+}
+
+textarea:focus {
+
+    border-color: #7773d8;
+
+    box-shadow:
+
+        0 0 0 4px
+        rgba(119,115,216,.12);
+
+}
+
+/* BUTTONS */
+
+.buttons {
+
+    display: flex;
+
+    gap: 10px;
+
+    margin-top: 12px;
+
+}
+
+button {
+
+    border: none;
+
+    border-radius: 11px;
+
+    padding: 12px 20px;
+
+    font-size: 15px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+}
+
+button:hover {
+
+    transform: translateY(-1px);
+
+}
+
+.submit {
+
+    background: #18181b;
+
+    color: white;
+
+}
+
+.reset {
+
+    background: #eeeeF2;
+
+    color: #222;
+
+}
+
+/* FEEDBACK */
+
+#feedback {
+
+    min-height: 28px;
+
+    margin:
+
+        18px 0
+        8px;
+
+    font-size: 18px;
+
+    font-weight: bold;
+
+}
+
+/* COMPLETED */
+
+.completed {
+
+    margin-top: 12px;
+
+    padding: 18px;
+
+    background: #f7f7f9;
+
+    border-radius: 15px;
+
+}
+
+.completed h3 {
+
+    margin-top: 0;
+
+}
+
+.completed-item {
+
+    padding:
+
+        10px 0;
+
+    border-top:
+
+        1px solid #e4e4e8;
+
+    line-height: 1.4;
+
+}
+
+.completed-item:first-of-type {
+
+    border-top: none;
+
+}
+
+.tip {
+
+    color: #777;
+
+    font-size: 13px;
+
+    margin-top: 15px;
+
+}
+
+/* =========================
+CONFETTI
+========================= */
+
+.confetti {
+
+    position: fixed;
+
+    width: 11px;
+
+    height: 16px;
+
+    z-index: 100;
+
+    pointer-events: none;
+
+}
+
+@keyframes explode {
+
+    from {
+
+        transform:
+            translate(0,0)
+            rotate(0deg);
+
+        opacity: 1;
+
+    }
+
+    to {
+
+        transform:
+            translate(
+                var(--x),
+                var(--y)
+            )
+            rotate(
+                var(--rotation)
+            );
+
+        opacity: 0;
+
+    }
+
+}
+
+/* =========================
+FINAL SCREEN
+========================= */
+
+#celebration {
+
+    display: none;
+
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 50;
+
+    overflow: hidden;
+
+    background:
+
+        radial-gradient(
+            circle at center,
+            #39226d 0%,
+            #120d25 55%,
+            #050509 100%
+        );
+
+}
+
+.final-message {
+
+    position: absolute;
+
+    z-index: 200;
+
+    left: 50%;
+
+    top: 50%;
+
+    transform:
+        translate(-50%,-50%);
+
+    width: 90%;
+
+    text-align: center;
+
+    color: white;
+
+}
+
+.final-message h1 {
+
+    font-size:
+
+        clamp(
+            70px,
+            14vw,
+            140px
+        );
+
+    margin: 0;
+
+    line-height: .9;
+
+    text-shadow:
+
+        0 0 20px white,
+        0 0 50px gold;
+
+}
+
+.final-message h2 {
+
+    font-size:
+
+        clamp(
+            28px,
+            5vw,
+            55px
+        );
+
+    margin:
+
+        25px 0
+        5px;
+
+}
+
+.final-message p {
+
+    font-size: 20px;
+
+    color: #ddd;
+
+}
+
+.final-message button {
+
+    margin-top: 15px;
+
+    background: white;
+
+    color: black;
+
+    font-size: 18px;
+
+}
+
+/* =========================
+BALLOONS
+========================= */
+
+.balloon {
+
+    position: fixed;
+
+    bottom: -120px;
+
+    width: 50px;
+
+    height: 65px;
+
+    border-radius: 50%;
+
+    z-index: 90;
+
+    animation:
+
+        balloonRise
+        var(--time)
+        linear
+        forwards;
+
+}
+
+.balloon::after {
+
+    content: "";
+
+    position: absolute;
+
+    left: 50%;
+
+    top: 64px;
+
+    width: 1px;
+
+    height: 75px;
+
+    background: white;
+
+}
+
+@keyframes balloonRise {
+
+    from {
+
+        transform:
+            translateY(0)
+            translateX(0);
+
+    }
+
+    to {
+
+        transform:
+
+            translateY(-130vh)
+
+            translateX(
+                var(--drift)
+            );
+
+    }
+
+}
+
+/* CANNONS */
+
+.cannon {
+
+    position: fixed;
+
+    bottom: 5px;
+
+    z-index: 110;
+
+    font-size: 75px;
+
+    filter:
+
+        drop-shadow(
+            0 0 10px white
+        );
+
+}
+
+.cannon-left {
+
+    left: 10px;
+
+    transform:
+
+        rotate(-25deg);
+
+}
+
+.cannon-right {
+
+    right: 10px;
+
+    transform:
+
+        scaleX(-1)
+
+        rotate(-25deg);
+
+}
+
+/* MOBILE */
+
+@media(max-width:550px) {
+
+    .quiz {
+
+        padding: 25px;
+
+    }
+
+    h1 {
+
+        font-size: 34px;
+
+    }
+
+    .buttons {
+
+        flex-direction: column;
+
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="quiz">
+
+<span class="badge">
+PHI GAMMA NU • STUDY
+</span>
+
+
+<h1>
+PGN Rights Quiz
+</h1>
+
+
+<p class="subtitle">
+
+Enter all four PGN rights from memory.
+
+<br><br>
+
+<strong>
+Exact wording and spelling required.
+</strong>
+
+</p>
+
+
+<div class="progress-row">
+
+<span>
+Progress
+</span>
+
+<span>
+
+<span id="progress">
+0
+</span>
+
+/ 4
+
+</span>
+
+</div>
+
+
+<div class="progress-bar">
+
+<div
+class="progress-fill"
+id="progressFill">
+</div>
+
+</div>
+
+
+<textarea
+
+id="answer"
+
+placeholder="Type one complete right here..."
+
+autocomplete="off">
+
+</textarea>
+
+
+<div class="buttons">
+
+<button
+class="submit"
+onclick="checkAnswer()">
+
+Submit Answer
+
+</button>
+
+
+<button
+class="reset"
+onclick="resetQuiz()">
+
+Reset Quiz
+
+</button>
+
+</div>
+
+
+<div id="feedback">
+</div>
+
+
+<div class="completed">
+
+<h3>
+Rights Completed
+</h3>
+
+<div id="completedList">
+
+None yet — 0 of 4.
+
+</div>
+
+</div>
+
+
+<div class="tip">
+
+Press Enter to submit.
+Use Shift + Enter for a new line.
+
+</div>
+
+</div>
+
+
+<!-- FINAL CELEBRATION -->
+
+
+<div id="celebration">
+
+
+<div class="cannon cannon-left">
+💥
+</div>
+
+
+<div class="cannon cannon-right">
+💥
+</div>
+
+
+<div class="final-message">
+
+<h1>
+4 / 4
+</h1>
+
+<h2>
+🎉 YOU KNOW ALL THE RIGHTS! 🎉
+</h2>
+
+<p>
+PGN Rights Quiz Complete
+</p>
+
+
+<button onclick="resetQuiz()">
+
+Run It Back
+
+</button>
+
+</div>
+
+</div>
+
+
+<script>
+
+/* =========================
+EXACT ANSWERS
+========================= */
+
+
+const rights = [
+
+"To have a voice in the business and programs of our chapter",
+
+"To be kept informed of chapter activities and messages from the National Fraternity",
+
+"To be represented and guided by competent leaders",
+
+"To express opinions, make suggestions and offer constructive criticism"
+
+];
+
+
+let completed = [];
+
+let celebrationIntervals = [];
+
+
+const colors = [
+
+"#ff3158",
+"#ffd23f",
+"#33d17a",
+"#4b8cff",
+"#b95cff",
+"#ff8b32",
+"#ffffff"
+
+];
+
+
+/* =========================
+CHECK ANSWER
+========================= */
+
+
+function checkAnswer() {
+
+const input =
+document.getElementById("answer");
+
+
+const answer =
+input.value.trim();
+
+
+const feedback =
+document.getElementById("feedback");
+
+
+if (
+rights.includes(answer)
+) {
+
+
+if (
+completed.includes(answer)
+) {
+
+feedback.innerHTML =
+"⚠️ You already completed that right.";
+
+}
+
+
+else {
+
+
+completed.push(answer);
+
+
+feedback.innerHTML =
+"✅ Correct!";
+
+
+miniCelebration();
+
+
+updateProgress();
+
+}
+
+
+}
+
+
+else {
+
+
+feedback.innerHTML =
+"❌ Not exact yet — check the wording, spelling, and capitalization.";
+
+}
+
+
+input.value = "";
+
+input.focus();
+
+}
+
+
+/* =========================
+UPDATE PROGRESS
+========================= */
+
+
+function updateProgress() {
+
+
+const progress =
+completed.length;
+
+
+document.getElementById(
+"progress"
+).innerText =
+progress;
+
+
+document.getElementById(
+"progressFill"
+).style.width =
+
+(progress / 4 * 100)
++ "%";
+
+
+let list = "";
+
+
+completed.forEach(
+
+function(right) {
+
+
+list +=
+
+'<div class="completed-item">'
+
++ "✓ "
+
++ right
+
++ "</div>";
+
+
+}
+
+);
+
+
+if (
+completed.length === 0
+) {
+
+list =
+"None yet — 0 of 4.";
+
+}
+
+
+document.getElementById(
+"completedList"
+).innerHTML =
+list;
+
+
+/* MUST GET ALL FOUR */
+
+if (
+progress === 4
+) {
+
+
+setTimeout(
+
+startMegaCelebration,
+
+600
+
+);
+
+
+}
+
+}
+
+
+/* =========================
+CONFETTI PARTICLE
+========================= */
+
+
+function createParticle(
+
+x,
+y,
+distance
+
+) {
+
+
+const particle =
+document.createElement("div");
+
+
+particle.className =
+"confetti";
+
+
+particle.style.left =
+x + "px";
+
+
+particle.style.top =
+y + "px";
+
+
+particle.style.background =
+
+colors[
+
+Math.floor(
+
+Math.random()
+*
+colors.length
+
+)
+
+];
+
+
+const angle =
+Math.random()
+*
+Math.PI
+*
+2;
+
+
+const power =
+
+60
++
+Math.random()
+*
+distance;
+
+
+particle.style.setProperty(
+
+"--x",
+
+Math.cos(angle)
+*
+power
++
+"px"
+
+);
+
+
+particle.style.setProperty(
+
+"--y",
+
+Math.sin(angle)
+*
+power
++
+"px"
+
+);
+
+
+particle.style.setProperty(
+
+"--rotation",
+
+(
+Math.random()
+*
+1600
+-
+800
+)
++
+"deg"
+
+);
+
+
+particle.style.animation =
+
+"explode "
+
++
+(
+.8
++
+Math.random()
+*
+1
+)
+
++
+"s ease-out forwards";
+
+
+document.body.appendChild(
+particle
+);
+
+
+setTimeout(
+
+function() {
+
+particle.remove();
+
+},
+
+2000
+
+);
+
+}
+
+
+/* =========================
+MINI CELEBRATION
+EVERY CORRECT ANSWER
+========================= */
+
+
+function miniCelebration() {
+
+
+const centerX =
+window.innerWidth / 2;
+
+
+const centerY =
+window.innerHeight / 2;
+
+
+for (
+let i = 0;
+i < 85;
+i++
+) {
+
+
+createParticle(
+
+centerX,
+centerY,
+350
+
+);
+
+
+}
+
+
+/* EXTRA SIDE BURSTS */
+
+
+for (
+let i = 0;
+i < 35;
+i++
+) {
+
+
+createParticle(
+
+30,
+window.innerHeight - 50,
+500
+
+);
+
+
+createParticle(
+
+window.innerWidth - 30,
+window.innerHeight - 50,
+500
+
+);
+
+
+}
+
+}
+
+
+/* =========================
+MEGA CELEBRATION
+========================= */
+
+
+function startMegaCelebration() {
+
+
+document.getElementById(
+"celebration"
+).style.display =
+"block";
+
+
+/* GIANT OPENING BLAST */
+
+
+for (
+let wave = 0;
+wave < 8;
+wave++
+) {
+
+
+setTimeout(
+
+function() {
+
+
+cannonBlast();
+
+
+createFirework();
+
+
+},
+
+wave * 250
+
+);
+
+
+}
+
+
+/* BALLOON FLOOD */
+
+
+for (
+let i = 0;
+i < 50;
+i++
+) {
+
+
+setTimeout(
+
+createBalloon,
+
+i * 90
+
+);
+
+
+}
+
+
+/* KEEP CONFETTI GOING */
+
+
+celebrationIntervals.push(
+
+setInterval(
+
+confettiRain,
+
+180
+
+)
+
+);
+
+
+/* KEEP FIREWORKS GOING */
+
+
+celebrationIntervals.push(
+
+setInterval(
+
+createFirework,
+
+550
+
+)
+
+);
+
+
+/* KEEP CANNONS FIRING */
+
+
+celebrationIntervals.push(
+
+setInterval(
+
+cannonBlast,
+
+1500
+
+)
+
+);
+
+
+/* MORE BALLOONS */
+
+
+celebrationIntervals.push(
+
+setInterval(
+
+createBalloon,
+
+550
+
+)
+
+);
+
+}
+
+
+/* =========================
+CONFETTI CANNONS
+========================= */
+
+
+function cannonBlast() {
+
+
+for (
+let i = 0;
+i < 100;
+i++
+) {
+
+
+createParticle(
+
+20,
+window.innerHeight - 20,
+850
+
+);
+
+
+createParticle(
+
+window.innerWidth - 20,
+window.innerHeight - 20,
+850
+
+);
+
+
+}
+
+}
+
+
+/* =========================
+CONFETTI RAIN
+========================= */
+
+
+function confettiRain() {
+
+
+for (
+let i = 0;
+i < 25;
+i++
+) {
+
+
+const particle =
+document.createElement("div");
+
+
+particle.className =
+"confetti";
+
+
+particle.style.left =
+
+Math.random()
+*
+100
++
+"vw";
+
+
+particle.style.top =
+"-30px";
+
+
+particle.style.background =
+
+colors[
+
+Math.floor(
+
+Math.random()
+*
+colors.length
+
+)
+
+];
+
+
+particle.style.setProperty(
+
+"--x",
+
+(
+Math.random()
+*
+180
+-
+90
+)
++
+"px"
+
+);
+
+
+particle.style.setProperty(
+
+"--y",
+
+"115vh"
+
+);
+
+
+particle.style.setProperty(
+
+"--rotation",
+
+(
+Math.random()
+*
+1800
+)
++
+"deg"
+
+);
+
+
+particle.style.animation =
+
+"explode "
+
++
+(
+2.5
++
+Math.random()
+*
+2.5
+)
+
++
+"s linear forwards";
+
+
+document.body.appendChild(
+particle
+);
+
+
+setTimeout(
+
+function() {
+
+particle.remove();
+
+},
+
+5500
+
+);
+
+}
+
+}
+
+
+/* =========================
+FIREWORKS
+========================= */
+
+
+function createFirework() {
+
+
+const x =
+
+window.innerWidth
+*
+(
+.1
++
+Math.random()
+*
+.8
+);
+
+
+const y =
+
+window.innerHeight
+*
+(
+.1
++
+Math.random()
+*
+.55
+);
+
+
+for (
+let i = 0;
+i < 65;
+i++
+) {
+
+
+createParticle(
+
+x,
+y,
+260
+
+);
+
+
+}
+
+}
+
+
+/* =========================
+BALLOONS
+========================= */
+
+
+function createBalloon() {
+
+
+const balloon =
+document.createElement(
+"div"
+);
+
+
+balloon.className =
+"balloon";
+
+
+balloon.style.left =
+
+Math.random()
+*
+95
++
+"vw";
+
+
+balloon.style.background =
+
+colors[
+
+Math.floor(
+
+Math.random()
+*
+(
+colors.length - 1
+)
+
+)
+
+];
+
+
+balloon.style.setProperty(
+
+"--drift",
+
+(
+Math.random()
+*
+250
+-
+125
+)
+
++
+"px"
+
+);
+
+
+balloon.style.setProperty(
+
+"--time",
+
+(
+4
++
+Math.random()
+*
+4
+)
+
++
+"s"
+
+);
+
+
+document.body.appendChild(
+balloon
+);
+
+
+setTimeout(
+
+function() {
+
+balloon.remove();
+
+},
+
+8500
+
+);
+
+}
+
+
+/* =========================
+RESET
+========================= */
+
+
+function resetQuiz() {
+
+
+completed = [];
+
+
+/* STOP CELEBRATION */
+
+
+celebrationIntervals.forEach(
+
+function(interval) {
+
+clearInterval(interval);
+
+}
+
+);
+
+
+celebrationIntervals = [];
+
+
+/* HIDE FINAL SCREEN */
+
+
+document.getElementById(
+"celebration"
+).style.display =
+"none";
+
+
+/* REMOVE PARTICLES */
+
+
+document.querySelectorAll(
+
+".confetti, .balloon"
+
+).forEach(
+
+function(element) {
+
+element.remove();
+
+}
+
+);
+
+
+/* RESET TEXT */
+
+
+document.getElementById(
+"feedback"
+).innerHTML =
+"";
+
+
+document.getElementById(
+"answer"
+).value =
+"";
+
+
+updateProgress();
+
+
+document.getElementById(
+"answer"
+).focus();
+
+}
+
+
+/* =========================
+ENTER TO SUBMIT
+========================= */
+
+
+document.getElementById(
+"answer"
+).addEventListener(
+
+"keydown",
+
+function(event) {
+
+
+if (
+
+event.key === "Enter"
+
+&&
+
+!event.shiftKey
+
+) {
+
+
+event.preventDefault();
+
+
+checkAnswer();
+
+
+}
+
+}
+
+);
+
+
+/* START FOCUSED */
+
+
+document.getElementById(
+"answer"
+).focus();
+
+
+</script>
+
+</body>
+
+</html>
